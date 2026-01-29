@@ -1,0 +1,295 @@
+/* frontend/src/App.css */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Garmound', Tahoma, Playfair Display, Verdana, sans-serif;
+  background:  linear-gradient(135deg,#008B8B 0%, #7FFFD4 100%);
+  min-height: 100vh;
+  transition: background 0.3s ease;
+}
+
+body.dark-mode {
+  background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+}
+
+.App {
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.App-header {
+  text-align: center;
+  color: white;
+  padding: 40px 20px;
+  margin-bottom: 30px;
+  position: relative;
+}
+
+.App-header h1 {
+  font-size: 3rem;
+  margin-bottom: 10px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.App-header p {
+  font-size: 1.2rem;
+  opacity: 0.9;
+}
+
+.header-actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.user-welcome {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 10px 20px;
+  border-radius: 20px;
+
+  color: white;
+  font-size: 1rem;
+
+}
+
+.settings-icon-button {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.settings-icon-button:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+  .App-header h1 {
+    font-size: 2rem;
+  }
+
+  .header-actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+
+/* frontend/src/App.css - Enhanced with Resume Prompt */
+
+/* ... Keep all existing CSS ... */
+
+/* Add these new styles: */
+
+.story-list-button {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.story-list-button:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+/* Resume Prompt Modal */
+.resume-prompt-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  animation: fadeIn 0.3s ease;
+}
+
+.resume-prompt-modal {
+  background: white;
+  border-radius: 20px;
+  padding: 40px;
+  max-width: 500px;
+  width: 90%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: slideUp 0.4s ease;
+}
+
+.dark-mode .resume-prompt-modal {
+  background: #2d3748;
+  color: #e2e8f0;
+}
+
+.resume-prompt-modal h2 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 25px;
+  font-size: 1.8rem;
+}
+
+.dark-mode .resume-prompt-modal h2 {
+  color: #e2e8f0;
+}
+
+.resume-story-info {
+  background: #f8f9fa;
+  border-radius: 15px;
+  padding: 25px;
+  margin-bottom: 25px;
+}
+
+.dark-mode .resume-story-info {
+  background: #1a202c;
+}
+
+.resume-story-info h3 {
+  color: #667eea;
+  margin-bottom: 15px;
+  font-size: 1.3rem;
+}
+
+.dark-mode .resume-story-info h3 {
+  color: #a3bffa;
+}
+
+.resume-story-info p {
+  color: #666;
+  margin: 8px 0;
+  font-size: 0.95rem;
+}
+
+.dark-mode .resume-story-info p {
+  color: #cbd5e0;
+}
+
+.story-mode {
+  font-weight: 600;
+  color: #667eea !important;
+}
+
+.dark-mode .story-mode {
+  color: #a3bffa !important;
+}
+
+.story-scenes {
+  font-weight: 500;
+}
+
+.draft-info {
+  color: #28a745 !important;
+  font-weight: bold;
+  margin-top: 12px;
+  padding: 10px;
+  background: rgba(40, 167, 69, 0.1);
+  border-radius: 8px;
+}
+
+.dark-mode .draft-info {
+  color: #68d391 !important;
+  background: rgba(104, 211, 145, 0.1);
+}
+
+.resume-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.resume-button,
+.new-story-button {
+  width: 100%;
+  padding: 15px;
+  border: none;
+  border-radius: 10px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.resume-button {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.resume-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+}
+
+.new-story-button {
+  background: white;
+  color: #667eea;
+  border: 2px solid #667eea;
+}
+
+.dark-mode .new-story-button {
+  background: #1a202c;
+  color: #a3bffa;
+  border-color: #a3bffa;
+}
+
+.new-story-button:hover {
+  background: #667eea;
+  color: white;
+  transform: translateY(-2px);
+}
+
+.dark-mode .new-story-button:hover {
+  background: #a3bffa;
+  color: #1a202c;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .resume-prompt-modal {
+    padding: 25px;
+  }
+  
+  .resume-prompt-modal h2 {
+    font-size: 1.5rem;
+  }
+  
+  .resume-story-info {
+    padding: 20px;
+  }
+}
