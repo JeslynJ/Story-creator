@@ -1,0 +1,464 @@
+/* frontend/src/components/StoryEditor.css */
+.story-editor {
+  max-width: 1400px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+}
+
+.editor-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid #e1e8ed;
+}
+
+.editor-header h2 {
+  color: #333;
+  font-size: 1.8rem;
+}
+
+.reset-button {
+  padding: 10px 20px;
+  background: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.reset-button:hover {
+  background: #5a6268;
+}
+
+.editor-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+}
+
+/* Story Draft Section */
+.story-draft {
+  background: #f8f9fa;
+  border-radius: 15px;
+  padding: 25px;
+  height: 600px;
+  display: flex;
+  flex-direction: column;
+}
+
+.story-draft h3 {
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.story-content {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 10px;
+}
+
+.story-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.story-content::-webkit-scrollbar-track {
+  background: #e1e8ed;
+  border-radius: 10px;
+}
+
+.story-content::-webkit-scrollbar-thumb {
+  background: #667eea;
+  border-radius: 10px;
+}
+
+.empty-state {
+  text-align: center;
+  color: #6c757d;
+  padding: 40px 20px;
+  font-style: italic;
+}
+
+.scene {
+  background: white;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.scene-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e1e8ed;
+}
+
+.scene-number {
+  font-weight: bold;
+  color: #667eea;
+  font-size: 0.9rem;
+}
+
+.scene-choice {
+  font-size: 0.85rem;
+  color: #764ba2;
+  font-style: italic;
+}
+
+.scene p {
+  line-height: 1.8;
+  color: #333;
+}
+
+.story-actions {
+  display: flex;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.download-button,
+.choices-button {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.download-button {
+  background: #28a745;
+  color: white;
+}
+
+.download-button:hover {
+  background: #218838;
+}
+
+.choices-button {
+  background: #667eea;
+  color: white;
+}
+
+.choices-button:hover {
+  background: #764ba2;
+}
+
+.choices-button:disabled {
+  background: #6c757d;
+  cursor: not-allowed;
+}
+
+/* Editor Panel Section */
+.editor-panel {
+  background: #f8f9fa;
+  border-radius: 15px;
+  padding: 25px;
+  height: 600px;
+  overflow-y: auto;
+}
+
+.editor-panel h3 {
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.scene-input {
+  width: 100%;
+  padding: 15px;
+  border: 2px solid #e1e8ed;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-family: inherit;
+  resize: vertical;
+  margin-bottom: 20px;
+}
+
+.scene-input:focus {
+  outline: none;
+  border-color: #667eea;
+}
+
+.editor-actions {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.check-button,
+.add-button {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.check-button {
+  background: #17a2b8;
+  color: white;
+}
+
+.check-button:hover:not(:disabled) {
+  background: #138496;
+}
+
+.add-button {
+  background: #28a745;
+  color: white;
+}
+
+.add-button:hover:not(:disabled) {
+  background: #218838;
+}
+
+.check-button:disabled,
+.add-button:disabled {
+  background: #6c757d;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Suggestions Panel */
+.suggestions-panel {
+  background: white;
+  border-radius: 10px;
+  padding: 20px;
+  margin-top: 20px;
+  border-left: 4px solid #667eea;
+}
+
+.suggestions-panel h4 {
+  color: #667eea;
+  margin-bottom: 15px;
+}
+
+.improved-text {
+  background: #e7f3ff;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+}
+
+.improved-text h5 {
+  color: #333;
+  margin-bottom: 10px;
+  font-size: 0.9rem;
+}
+
+.improved-text p {
+  line-height: 1.6;
+  color: #333;
+}
+
+.suggestion-list {
+  margin-top: 15px;
+}
+
+.suggestion-list h5 {
+  color: #333;
+  margin-bottom: 10px;
+  font-size: 0.9rem;
+}
+
+.suggestion-item {
+  background: #f8f9fa;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  font-size: 0.9rem;
+}
+
+.suggestion-item strong {
+  color: #667eea;
+}
+
+.suggestion-item .reason {
+  color: #6c757d;
+  margin-top: 5px;
+  font-size: 0.85rem;
+}
+
+.suggestion-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.accept-button,
+.dismiss-button {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.accept-button {
+  background: #28a745;
+  color: white;
+}
+
+.accept-button:hover {
+  background: #218838;
+}
+
+.dismiss-button {
+  background: #dc3545;
+  color: white;
+}
+
+.dismiss-button:hover {
+  background: #c82333;
+}
+
+.no-issues {
+  color: #28a745;
+  text-align: center;
+  padding: 20px;
+  font-weight: bold;
+}
+
+/* Choices Panel */
+.choices-panel {
+  padding: 25px;
+}
+
+.choices-panel h3 {
+  color: #333;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.loading {
+  text-align: center;
+  color: #6c757d;
+  padding: 40px;
+}
+
+.choices-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.choice-card {
+  background: white;
+  border-radius: 10px;
+  padding: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 2px solid #e1e8ed;
+}
+
+.choice-card:hover {
+  border-color: #667eea;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2);
+  transform: translateX(5px);
+}
+
+.choice-card h4 {
+  color: #667eea;
+  margin-bottom: 10px;
+}
+
+.choice-card p {
+  color: #333;
+  line-height: 1.6;
+}
+
+.back-button {
+  width: 100%;
+  padding: 12px;
+  background: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.back-button:hover {
+  background: #5a6268;
+}
+
+/* Responsive Design */
+.scene-buttons {
+  display: flex;
+  gap: 12px;        /* space between Edit & Delete */
+  margin-top: 6px;
+}
+
+/* Common button style */
+.scene-btn {
+  padding: 4px 9px;
+  font-size: 13px;
+  border-radius: 4px;
+  border: 1px solid #888;
+  background: transparent;
+  cursor: pointer;             /* 👈 finger cursor */
+  transition: background-color 0.15s ease;
+}
+
+/* Hover darkening */
+.scene-btn:hover {
+  background-color: #eaeaea;
+}
+
+/* Delete button */
+.scene-btn.delete-btn {
+  border-color: red;
+  background-color: red;
+  color: white;
+}
+
+.scene-btn.delete-btn:hover {
+  background-color: #c80000;
+}
+
+
+@media (max-width: 1024px) {
+  .editor-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .story-draft,
+  .editor-panel {
+    height: auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .story-editor {
+    padding: 15px;
+  }
+
+  .editor-header {
+    flex-direction: column;
+    gap: 15px;
+    text-align: center;
+  }
+
+  .editor-actions {
+    flex-direction: column;
+  }
+
+  .story-actions {
+    flex-direction: column;
+  }
+}
