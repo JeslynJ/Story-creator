@@ -428,3 +428,243 @@
     flex-direction: column;
   }
 }
+
+/* frontend/src/components/StoryEditor.css - Enhanced */
+
+/* ... Keep all existing CSS from before ... */
+/* Add these new styles: */
+
+/* Story Title Input */
+.story-title-input {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  padding: 8px 12px;
+  background: transparent;
+  transition: all 0.3s ease;
+  max-width: 400px;
+}
+
+.dark-mode .story-title-input {
+  color: #e2e8f0;
+}
+
+.story-title-input:hover {
+  background: #f8f9fa;
+  border-color: #e1e8ed;
+}
+
+.dark-mode .story-title-input:hover {
+  background: #1a202c;
+  border-color: #4a5568;
+}
+
+.story-title-input:focus {
+  outline: none;
+  background: white;
+  border-color: #667eea;
+}
+
+.dark-mode .story-title-input:focus {
+  background: #2d3748;
+}
+
+/* Story Meta Info */
+.story-meta {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+
+.mode-badge,
+.language-badge {
+  background: rgba(102, 126, 234, 0.1);
+  color: #667eea;
+  padding: 4px 12px;
+  border-radius: 15px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.dark-mode .mode-badge,
+.dark-mode .language-badge {
+  background: rgba(102, 126, 234, 0.2);
+  color: #a3bffa;
+}
+
+/* Auto-Save Status */
+.auto-save-status {
+  font-size: 0.85rem;
+  padding: 4px 12px;
+  border-radius: 15px;
+  font-weight: 500;
+  animation: fadeIn 0.3s ease;
+}
+
+.auto-save-status:contains('✅') {
+  background: rgba(40, 167, 69, 0.1);
+  color: #28a745;
+}
+
+.auto-save-status:contains('⏳') {
+  background: rgba(255, 193, 7, 0.1);
+  color: #ffc107;
+}
+
+.auto-save-status:contains('❌') {
+  background: rgba(220, 53, 69, 0.1);
+  color: #dc3545;
+}
+
+.last-saved {
+  font-size: 0.8rem;
+  color: #6c757d;
+  font-style: italic;
+}
+
+.dark-mode .last-saved {
+  color: #a0aec0;
+}
+
+/* Header Layout */
+.header-left {
+  flex: 1;
+}
+
+.editor-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+/* Scene Language Badge */
+.scene-language {
+  font-size: 0.75rem;
+  color: #667eea;
+  background: rgba(102, 126, 234, 0.1);
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+
+.dark-mode .scene-language {
+  color: #a3bffa;
+  background: rgba(102, 126, 234, 0.2);
+}
+
+/* Language Detection Info */
+.editor-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.language-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(102, 126, 234, 0.1);
+  padding: 8px 15px;
+  border-radius: 20px;
+}
+
+.dark-mode .language-info {
+  background: rgba(102, 126, 234, 0.2);
+}
+
+.detected-lang-label {
+  font-size: 0.85rem;
+  color: #666;
+  font-weight: 500;
+}
+
+.dark-mode .detected-lang-label {
+  color: #a0aec0;
+}
+
+.detected-lang-value {
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: #667eea;
+}
+
+.dark-mode .detected-lang-value {
+  color: #a3bffa;
+}
+
+.lang-hint {
+  font-size: 0.75rem;
+  color: #28a745;
+  font-style: italic;
+  margin-left: 8px;
+}
+
+.dark-mode .lang-hint {
+  color: #68d391;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Pulse animation for auto-save */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.auto-save-status:contains('⏳') {
+  animation: pulse 1.5s ease infinite;
+}
+
+/* Responsive Updates */
+@media (max-width: 1024px) {
+  .editor-header {
+    flex-direction: column;
+  }
+  
+  .story-title-input {
+    max-width: 100%;
+  }
+  
+  .story-meta {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 768px) {
+  .editor-panel-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .language-info {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .story-meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+}
