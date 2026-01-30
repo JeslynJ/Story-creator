@@ -1,7 +1,7 @@
 {
   "name": "story-creator-backend",
-  "version": "2.0.0",
-  "description": "Backend API for Story Creator App with Auth & Database",
+  "version": "3.0.0",
+  "description": "Backend with True Multilingual Support & Auto-Save",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
@@ -11,7 +11,8 @@
     "api",
     "story",
     "ai",
-    "mistral"
+    "mistral",
+    "multilingual"
   ],
   "author": "",
   "license": "ISC",
@@ -21,10 +22,12 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.18.2",
-    "jsonwebtoken": "^9.0.3",
-    "mongoose": "^8.21.0"
+    "franc-min": "^6.2.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.0.3"
   },
   "devDependencies": {
+    "@ljharb/tsconfig": "^0.3.2",
     "nodemon": "^3.0.1"
   }
 }
