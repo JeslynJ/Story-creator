@@ -16,8 +16,11 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(localStorage.getItem('token'));
   const [loading, setLoading] = useState(true);
-  const [darkMode, setDarkMode] = useState(false);
-  const [language, setLanguage] = useState('en');
+  const [darkMode, setDarkMode] = useState(localStorage.getItem('darkMode') === 'true');
+  const [language, setLanguage] = useState(() => {
+    const savedLang = localStorage.getItem('language');
+    return savedLang || 'en';
+  });
 
   const API_URL = 'http://localhost:5000/api';
 
@@ -61,8 +64,12 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem('token', newToken);
       setToken(newToken);
       setUser(userData);
-      setDarkMode(userData.darkMode);
-      setLanguage(userData.preferredLanguage);
+      const savedDarkMode = userData.darkMode || false;
+      const savedLanguage = userData.preferredLanguage || localStorage.getItem('language') || 'en';
+      setDarkMode(savedDarkMode);
+      setLanguage(savedLanguage);
+      localStorage.setItem('darkMode', savedDarkMode);
+      localStorage.setItem('language', savedLanguage);
       axios.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
       
       return { success: true };
@@ -85,8 +92,12 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem('token', newToken);
       setToken(newToken);
       setUser(userData);
-      setDarkMode(userData.darkMode);
-      setLanguage(userData.preferredLanguage);
+      const savedDarkMode = userData.darkMode || false;
+      const savedLanguage = userData.preferredLanguage || localStorage.getItem('language') || 'en';
+      setDarkMode(savedDarkMode);
+      setLanguage(savedLanguage);
+      localStorage.setItem('darkMode', savedDarkMode);
+      localStorage.setItem('language', savedLanguage);
       axios.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
       
       return { success: true };
@@ -102,19 +113,25 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('token');
     setToken(null);
     setUser(null);
+    // Keep language and darkMode preferences even after logout
     delete axios.defaults.headers.common['Authorization'];
   };
 
   const updateSettings = async (newDarkMode, newLanguage) => {
     try {
+      // Ensure language is valid
+      const validLanguage = newLanguage && ['en', 'hi', 'es', 'fr'].includes(newLanguage) ? newLanguage : 'en';
+      
       const response = await axios.put(`${API_URL}/auth/settings`, {
         darkMode: newDarkMode,
-        preferredLanguage: newLanguage
+        preferredLanguage: validLanguage
       });
       
       setUser(response.data.user);
       setDarkMode(newDarkMode);
-      setLanguage(newLanguage);
+      setLanguage(validLanguage);
+      localStorage.setItem('darkMode', newDarkMode);
+      localStorage.setItem('language', validLanguage);
       
       return { success: true };
     } catch (error) {

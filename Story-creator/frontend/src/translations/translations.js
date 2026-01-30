@@ -307,6 +307,8 @@ export const translations = {
 
 export const useTranslation = (language) => {
   return (key) => {
-    return translations[language]?.[key] || translations['en'][key] || key;
+    // Ensure language is valid, default to 'en'
+    const validLanguage = language && translations[language] ? language : 'en';
+    return translations[validLanguage]?.[key] || translations['en'][key] || key;
   };
 };
