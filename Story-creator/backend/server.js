@@ -98,31 +98,22 @@ const languageMap = {
 
 // Language Detection Function
 function detectLanguage(text) {
-  if (!text || text.trim().length < 10) {
+  if (!text || text.trim().length < 3) {
     return { code: 'eng', name: 'English' };
   }
-  
+
   try {
-    // Detect language using franc
-    const langCode = franc(text);
-    
-    // If detection is uncertain (returns 'und' or null), try with more text or default to English
-    if (!langCode || langCode === 'und') {
-      // Try detecting with more context if available
-      if (text.length > 50) {
-        const langCode2 = franc(text.substring(0, Math.min(500, text.length)));
-        if (langCode2 && langCode2 !== 'und' && languageMap[langCode2]) {
-          const langName = languageMap[langCode2];
-          console.log(`Detected language (retry): ${langCode2} -> ${langName} (text length: ${text.length})`);
-          return { code: langCode2, name: langName };
-        }
-      }
-      console.log(`Language detection uncertain, defaulting to English (text length: ${text.length})`);
-      return { code: 'eng', name: 'English' };
+    const trimmed = text.trim();
+
+    // Heuristic: if the text contains Devanagari script characters, treat as Hindi
+    // Devanagari range: \u0900 - \u097F
+    if (/[\u0900-\u097F]/.test(trimmed)) {
+      return { code: 'hin', name: 'Hindi' };
     }
-    
+
+    // Fallback to franc detection
+    const langCode = franc(trimmed);
     const langName = languageMap[langCode] || 'English';
-    console.log(`Detected language: ${langCode} -> ${langName} (text length: ${text.length})`);
     return { code: langCode, name: langName };
   } catch (error) {
     console.error('Language detection error:', error);
@@ -149,21 +140,10 @@ const verifyToken = (req, res, next) => {
 
 // Mistral AI Helper Function with Language Preservation
 async function callMistralAPI(prompt, systemPrompt = '', userLanguage = 'English') {
-  // Create very explicit language instruction
-  const languageInstruction = `CRITICAL LANGUAGE REQUIREMENT: The user is writing in ${userLanguage}. 
-You MUST respond EXCLUSIVELY in ${userLanguage}. 
-DO NOT use English or any other language. 
-DO NOT translate the content to English. 
-Every single word of your response must be in ${userLanguage}.
-If you cannot respond in ${userLanguage}, do not respond at all.`;
-
   // Enhanced system prompt to maintain language consistency
   const enhancedSystemPrompt = systemPrompt 
-    ? `${systemPrompt}\n\n${languageInstruction}`
-    : `You are a creative writing assistant. ${languageInstruction} Maintain the exact language, script, and cultural context of ${userLanguage}.`;
-
-  // Also add language instruction to user prompt for reinforcement
-  const enhancedPrompt = `${prompt}\n\nRemember: Respond ONLY in ${userLanguage}. Do not use any other language.`;
+    ? `${systemPrompt}\n\nIMPORTANT: The user is writing in ${userLanguage}. You MUST respond ONLY in ${userLanguage}. Do not translate or use any other language.`
+    : `You are a creative writing assistant. The user is writing in ${userLanguage}. You MUST respond ONLY in ${userLanguage}. Maintain the exact language and cultural context.`;
 
   const response = await fetch('https://api.mistral.ai/v1/chat/completions', {
     method: 'POST',
@@ -175,9 +155,9 @@ If you cannot respond in ${userLanguage}, do not respond at all.`;
       model: 'mistral-small-latest',
       messages: [
         { role: 'system', content: enhancedSystemPrompt },
-        { role: 'user', content: enhancedPrompt }
+        { role: 'user', content: prompt }
       ],
-      temperature: 0.6, // Lower temperature for more consistent language adherence
+      temperature: 0.7,
       max_tokens: 1500
     })
   });
@@ -532,23 +512,23 @@ app.post('/api/grammar-check', verifyToken, async (req, res) => {
 
     const prompt = `You are a creative writing assistant for a ${mode} story.
 
-CRITICAL: The user is writing in ${userLanguage}. You MUST respond ONLY in ${userLanguage}. Every word must be in ${userLanguage}.
+The user is writing in ${userLanguage}. You MUST respond ONLY in ${userLanguage}.
 
 Check the following text for grammar, spelling, and suggest improvements for tone and wording that fit the ${mode} genre.
 
 Text: "${text}"
 
-Respond in JSON format. ALL text content (original, suggested, reason, improvedVersion) must be EXCLUSIVELY in ${userLanguage}:
+Respond in JSON format (but keep all text content in ${userLanguage}):
 {
   "hasIssues": boolean,
   "suggestions": [
     {
-      "original": "text with issue (MUST be in ${userLanguage})",
-      "suggested": "improved text (MUST be in ${userLanguage})",
-      "reason": "why this is better (MUST be in ${userLanguage})"
+      "original": "text with issue (in ${userLanguage})",
+      "suggested": "improved text (in ${userLanguage})",
+      "reason": "why this is better (in ${userLanguage})"
     }
   ],
-  "improvedVersion": "full improved text (MUST be in ${userLanguage})"
+  "improvedVersion": "full improved text (in ${userLanguage})"
 }`;
 
     const response = await callMistralAPI(prompt, '', userLanguage);
@@ -580,33 +560,33 @@ app.post('/api/generate-choices', verifyToken, async (req, res) => {
 
     const prompt = `You are creating plot choices for a ${mode} story.
 
-CRITICAL: The story is written in ${userLanguage}. You MUST respond ONLY in ${userLanguage}. Every single word must be in ${userLanguage}.
+The story is written in ${userLanguage}. You MUST respond ONLY in ${userLanguage}.
 
-Story so far (in ${userLanguage}):
+Story so far:
 ${storyContext}
 
-Current scene (in ${userLanguage}):
+Current scene:
 ${currentScene}
 
-Generate 3 compelling plot direction choices for what happens next. Each choice description should be 50-100 words. ALL text (titles and descriptions) MUST be EXCLUSIVELY in ${userLanguage}.
+Generate 3 compelling plot direction choices for what happens next. Each should be 50-100 words in ${userLanguage}.
 
-Respond in JSON format. ALL content must be in ${userLanguage}:
+Respond in JSON format (but keep all text content in ${userLanguage}):
 {
   "choices": [
     {
       "id": 1,
-      "title": "Brief title (MUST be in ${userLanguage})",
-      "description": "What happens in this choice (MUST be in ${userLanguage}, 50-100 words)"
+      "title": "Brief title (in ${userLanguage})",
+      "description": "What happens in this choice (in ${userLanguage})"
     },
     {
       "id": 2,
-      "title": "Brief title (MUST be in ${userLanguage})",
-      "description": "What happens in this choice (MUST be in ${userLanguage}, 50-100 words)"
+      "title": "Brief title (in ${userLanguage})",
+      "description": "What happens in this choice (in ${userLanguage})"
     },
     {
       "id": 3,
-      "title": "Brief title (MUST be in ${userLanguage})",
-      "description": "What happens in this choice (MUST be in ${userLanguage}, 50-100 words)"
+      "title": "Brief title (in ${userLanguage})",
+      "description": "What happens in this choice (in ${userLanguage})"
     }
   ]
 }`;
@@ -634,15 +614,9 @@ app.post('/api/continue-scene', verifyToken, async (req, res) => {
     const detected = detectLanguage(storyContext);
     const userLanguage = detected.name;
 
-    const systemPrompt = `You are a creative writer specializing in ${mode} stories. 
-CRITICAL: The story is written in ${userLanguage}. 
-You MUST write EXCLUSIVELY in ${userLanguage}. 
-DO NOT use English or any other language. 
-Every single word must be in ${userLanguage}.`;
+    const systemPrompt = `You are a creative writer specializing in ${mode} stories. The story is written in ${userLanguage}. You MUST write ONLY in ${userLanguage}.`;
 
-    const prompt = `Continue the story based on the chosen plot direction.
-
-CRITICAL: Write EXCLUSIVELY in ${userLanguage}. Do not use any other language.
+    const prompt = `Continue the story based on the chosen plot direction. Write in ${userLanguage}.
 
 Story so far (in ${userLanguage}):
 ${storyContext}
@@ -650,11 +624,9 @@ ${storyContext}
 Chosen direction (in ${userLanguage}):
 ${selectedChoice}
 
-Write the next scene (200-300 words) that follows this choice. 
-The entire scene must be written EXCLUSIVELY in ${userLanguage}. 
-Make it engaging and appropriate for the ${mode} genre.
+Write the next scene (200-300 words) that follows this choice in ${userLanguage}. Make it engaging and appropriate for the ${mode} genre.
 
-Respond with just the story text in ${userLanguage}, no JSON formatting, no English, only ${userLanguage}.`;
+Respond with just the story text in ${userLanguage}, no JSON formatting.`;
 
     const continuation = await callMistralAPI(prompt, systemPrompt, userLanguage);
 
