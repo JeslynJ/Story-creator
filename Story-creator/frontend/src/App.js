@@ -70,10 +70,17 @@ function AppContent() {
     checkForLastActiveStory();
   };
 
-  const handleLoadStory = (story) => {
-    setMode(story.mode);
-    setCurrentStory(story);
-    setShowStoryList(false);
+  const handleLoadStory = async (story) => {
+    try {
+      // Fetch full story with images (list view excludes scenes.image to avoid memory crash)
+      const response = await axios.get(`${API_URL}/stories/${story._id}`);
+      setMode(response.data.story.mode);
+      setCurrentStory(response.data.story);
+      setShowStoryList(false);
+    } catch (error) {
+      console.error('Failed to load story:', error);
+      alert('Failed to load story');
+    }
   };
 
   if (!isAuthenticated) {

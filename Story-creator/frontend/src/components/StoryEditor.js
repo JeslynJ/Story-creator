@@ -177,7 +177,8 @@ const StoryEditor = ({
     try {
       const response = await axios.post(`${API_URL}/stories/${storyId}/scenes`, {
         text: inputText,
-        fromChoice: null
+        fromChoice: null,
+        image: null
       });
 
       setStory(response.data.story.scenes);
@@ -234,9 +235,23 @@ const StoryEditor = ({
         storyId
       });
 
+      // Generate image only when Text + Images format is selected and attach to the new scene
+      let imageBase64 = null;
+      if (outputFormat === 'text-images') {
+        try {
+          const imageResponse = await axios.post(`${API_URL}/generate-image`, {
+            prompt: response.data.continuation, // use generated story text as prompt
+          });
+          imageBase64 = imageResponse.data.image;
+        } catch (imageError) {
+          console.error('Image generation failed:', imageError);
+        }
+      }
+
       const addResponse = await axios.post(`${API_URL}/stories/${storyId}/scenes`, {
         text: response.data.continuation,
-        fromChoice: choice.title
+        fromChoice: choice.title,
+        image: imageBase64 || null
       });
 
       setStory(addResponse.data.story.scenes);
@@ -255,9 +270,7 @@ const StoryEditor = ({
     }
   };
 
-  // --- FIXED DELETE FUNCTION ---
   const handleDeleteScene = async (sceneIndex) => {
-    // Ensure we're not deleting while editing
     if (editingSceneId !== null) {
       setEditingSceneId(null);
       setEditedText('');
@@ -297,7 +310,6 @@ const StoryEditor = ({
     setEditedText(scene.text);
   };
 
-  // --- FIXED SAVE EDIT FUNCTION ---
   const handleSaveEdit = async (sceneIndex) => {
     if (sceneIndex === null || sceneIndex === undefined) return;
     
@@ -438,7 +450,7 @@ const StoryEditor = ({
               <p className="empty-state">{t('emptyStory')}</p>
             ) : (
               story.map((scene, index) => (
-                <div key={index} className="scene">
+                <div key={index} className="scene" style={{ marginBottom: '25px' }}>
                   <div className="scene-header">
                     <span className="scene-number">Scene {index + 1}</span>
                     {scene.fromChoice && <span className="scene-choice">→ {scene.fromChoice}</span>}
@@ -460,7 +472,22 @@ const StoryEditor = ({
                     </>
                   ) : (
                     <>
-                      <p>{scene.text}</p>
+                      <p style={{ whiteSpace: 'pre-line' }}>{scene.text}</p>
+
+                      {scene.image && scene.image.length > 100 && (
+                        <img
+                          src={`data:image/png;base64,${scene.image}`}
+                          alt="Scene Illustration"
+                          style={{
+                            width: '100%',
+                            maxHeight: '400px',
+                            objectFit: 'cover',
+                            borderRadius: '10px',
+                            marginTop: '12px'
+                          }}
+                        />
+                      )}
+
                       <div className="scene-buttons">
                         <button className="scene-btn edit-btn" onClick={() => handleEditScene(scene, index)}>
                           Edit

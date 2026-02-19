@@ -83,6 +83,18 @@ const StoryList = ({ onLoadStory, onClose }) => {
                     )}
                   </div>
 
+                  {story.image && story.image.length > 100 && (
+                    <img
+                      src={`data:image/png;base64,${story.image}`}
+                      alt="Saved Illustration"
+                      style={{
+                        width: "100%",
+                        marginTop: "15px",
+                        borderRadius: "8px"
+                      }}
+                    />
+                  )}
+
                   {story.scenes.length > 0 && (
                     <div className="story-preview">
                       {story.scenes[0]?.text.substring(0, 150)}...

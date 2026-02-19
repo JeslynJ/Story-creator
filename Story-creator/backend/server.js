@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { franc } = require('franc-min');
+const imageRoutes = require('./routes/imageRoutes');
 require('dotenv').config();
 
 const app = express();
@@ -12,7 +13,9 @@ const PORT = process.env.PORT || 5000;
 
 // Middleware
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ limit: '10mb', extended: true }));
+app.use('/api', imageRoutes);
 
 // MongoDB Connection
 mongoose.connect(process.env.MONGODB_URI, {
@@ -40,11 +43,13 @@ const storySchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   title: { type: String, required: true },
   mode: { type: String, required: true },
+  image: { type: String, default: null }, // Optional cover/summary image for the story
   scenes: [{ 
     text: String, 
     timestamp: { type: Date, default: Date.now },
     fromChoice: String,
-    language: String  // Language of each scene
+    image: String,        // Optional base64 image for this scene
+    language: String      // Language of each scene
   }],
   detectedLanguage: { type: String, default: 'en' },  // Auto-detected story language
   currentDraft: { 
@@ -334,7 +339,7 @@ app.put('/api/stories/:id/draft', verifyToken, async (req, res) => {
 // Add Scene to Story (when user commits a scene)
 app.post('/api/stories/:id/scenes', verifyToken, async (req, res) => {
   try {
-    const { text, fromChoice } = req.body;
+    const { text, fromChoice, image } = req.body;
 
     // Detect language of this specific scene
     const detected = detectLanguage(text);
@@ -348,13 +353,19 @@ app.post('/api/stories/:id/scenes', verifyToken, async (req, res) => {
       return res.status(404).json({ error: 'Story not found' });
     }
 
-    // Add scene
+    // Add scene (optionally with image)
     story.scenes.push({
       text,
       fromChoice,
+      image: image || null,
       language: detected.code,
       timestamp: Date.now()
     });
+
+    // If an image was provided, also set it as the story's cover image
+    if (image) {
+      story.image = image;
+    }
 
     // Update story language if this is the first scene
     if (story.scenes.length === 1) {
@@ -379,7 +390,9 @@ app.post('/api/stories/:id/scenes', verifyToken, async (req, res) => {
 app.get('/api/stories', verifyToken, async (req, res) => {
   try {
     const stories = await Story.find({ userId: req.userId })
-      .sort({ lastAccessedAt: -1 });
+      .select('-scenes.image')
+      .limit(20)
+      .lean();
     res.json({ stories });
   } catch (error) {
     console.error('Get stories error:', error);
