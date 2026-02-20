@@ -53,7 +53,7 @@ const Settings = ({ onClose }) => {
 
           {/* Language Selection */}
           <div className="settings-section">
-            <h3>🌍 {t('language')}</h3>
+            <h3>🌐 {t('language')}</h3>
             <div className="language-grid">
               {languages.map((lang) => (
                 <div

@@ -74,7 +74,7 @@ const StoryEditor = ({
 
     if (inputText && inputText !== initialDraftText.current) {
       hasUnsavedChanges.current = true;
-      setAutoSaveStatus('⏳ Saving...');
+      setAutoSaveStatus(' Saving...');
       
       autoSaveTimer.current = setTimeout(async () => {
         if (!storyId || !inputText.trim()) return;
@@ -86,12 +86,12 @@ const StoryEditor = ({
           
           hasUnsavedChanges.current = false;
           setLastSaved(new Date());
-          setAutoSaveStatus('✅ Saved');
+          setAutoSaveStatus(' Saved');
           
           setTimeout(() => setAutoSaveStatus(''), 2000);
         } catch (error) {
           console.error('Auto-save error:', error);
-          setAutoSaveStatus('❌ Save failed');
+          setAutoSaveStatus(' Save failed');
         }
       }, 2000);
     }
@@ -430,7 +430,7 @@ const StoryEditor = ({
             placeholder="Story Title"
           />
           <div className="story-meta">
-            <span className="mode-badge">✍️ {mode}</span>
+            <span className="mode-badge"> {mode}</span>
             <span className="language-badge">🌍 {languageName}</span>
             {autoSaveStatus && <span className="auto-save-status">{autoSaveStatus}</span>}
             {lastSaved && !autoSaveStatus && (
@@ -444,7 +444,7 @@ const StoryEditor = ({
       <div className="editor-layout">
         {/* Left: Story Draft */}
         <div className="story-draft">
-          <h3>📚 {t('yourStory')}</h3>
+          <h3> {t('yourStory')}</h3>
           <div className="story-content">
             {story.length === 0 ? (
               <p className="empty-state">{t('emptyStory')}</p>
@@ -509,7 +509,7 @@ const StoryEditor = ({
                 📥 {t('downloadPDF')}
               </button>
               <button onClick={handleGenerateChoices} className="choices-button" disabled={loading}>
-                {loading ? t('generating') : `🎲 ${t('generateChoices')}`}
+                {loading ? t('generating') : ` ${t('generateChoices')}`}
               </button>
             </div>
           )}
@@ -520,7 +520,7 @@ const StoryEditor = ({
           {!showChoices ? (
             <>
               <div className="editor-panel-header">
-                <h3>✏️ {t('writeScene')}</h3>
+                <h3> {t('writeScene')}</h3>
                 <div className="language-info">
                   <span className="detected-lang-label">Writing in:</span>
                   <span className="detected-lang-value">{languageName}</span>
@@ -544,14 +544,14 @@ const StoryEditor = ({
                   disabled={loading || !inputText.trim()}
                   className="check-button"
                 >
-                  {loading ? t('checking') : `🔍 ${t('checkImprove')}`}
+                  {loading ? t('checking') : `🔍︎ ${t('checkImprove')}`}
                 </button>
                 <button 
                   onClick={handleAddToStory}
                   disabled={!inputText.trim()}
                   className="add-button"
                 >
-                  ✅ {t('addToStory')}
+                   {t('addToStory')}
                 </button>
               </div>
 
@@ -578,7 +578,7 @@ const StoryEditor = ({
                       )}
                       <div className="suggestion-actions">
                         <button onClick={handleAcceptSuggestion} className="accept-button">
-                          ✅ {t('acceptImprovements')}
+                           {t('acceptImprovements')}
                         </button>
                         <button onClick={() => setSuggestions(null)} className="dismiss-button">
                           ❌ {t('keepOriginal')}
@@ -586,14 +586,14 @@ const StoryEditor = ({
                       </div>
                     </>
                   ) : (
-                    <p className="no-issues">✨ {t('looksGreat')}</p>
+                    <p className="no-issues"> {t('looksGreat')}</p>
                   )}
                 </div>
               )}
             </>
           ) : (
             <div className="choices-panel">
-              <h3>🎲 {t('chooseYourPath')}</h3>
+              <h3> {t('chooseYourPath')}</h3>
               {loading ? (
                 <p className="loading">{t('generating')}</p>
               ) : choices ? (

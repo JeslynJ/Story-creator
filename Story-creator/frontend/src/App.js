@@ -87,7 +87,7 @@ function AppContent() {
     return (
       <div className="App">
         <header className="App-header">
-          <h1>📖 {t('appTitle')}</h1>
+          <h1> {t('appTitle')}</h1>
           <p>{t('appSubtitle')}</p>
         </header>
         <Auth />
@@ -98,7 +98,7 @@ function AppContent() {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>📖 {t('appTitle')}</h1>
+        <h1> {t('appTitle')}</h1>
         <p>{t('appSubtitle')}</p>
         <div className="header-actions">
           <span className="user-welcome">
@@ -109,7 +109,7 @@ function AppContent() {
               className="story-list-button" 
               onClick={() => setShowStoryList(true)}
             >
-              📚 {t('myStories')}
+               {t('myStories')}
             </button>
           )}
           <button 
@@ -134,16 +134,16 @@ function AppContent() {
               </p>
               {lastActiveStory.currentDraft?.text && (
                 <p className="draft-info">
-                  💾 You have an unsaved draft
+                   You have an unsaved draft
                 </p>
               )}
             </div>
             <div className="resume-actions">
               <button className="resume-button" onClick={handleResumeStory}>
-                ✅ Continue Writing
+                 Continue Writing
               </button>
               <button className="new-story-button" onClick={handleStartNew}>
-                ✨ Start New Story
+                 Start New Story
               </button>
             </div>
           </div>
